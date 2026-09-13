@@ -26,36 +26,36 @@ import java.util.List;
 @RequestMapping("/attendance")
 public class AttendanceController {
 
-    private final AttendanceService attendanceService;
+    private AttendanceService service;
 
-    public AttendanceController(AttendanceService attendanceService) {
-        this.attendanceService = attendanceService;
+    public AttendanceController(AttendanceService service){
+        this.service = service;
     }
 
     @PostMapping("/check-in")
     public Attendance checkIn(@RequestBody Attendance request) {
-        return attendanceService.checkIn(request);
+        return service.checkIn(request);
     }
 
     @GetMapping
     public List<Attendance> getAttendances() {
-        return attendanceService.getAttendances();
+        return service.getAttendances();
     }
 
     @GetMapping("/{id}")
     public Attendance getAttendance(@PathVariable Long id) {
-        return attendanceService.getAttendanceById(id);
+        return service.getAttendance(id);
     }
 
     @GetMapping("/late-count")
     public long countLate() {
-        return attendanceService.countLate();
+        return service.countLate();
     }
 
     // 관리자가 잘못 입력된 출석 시각을 정정하는 API.
     // 지각 판정 로직을 checkIn()과 별개로 다시 구현하다가 경계값 조건(<= vs <)이 미묘하게 달라졌다.
     @PutMapping("/{id}")
     public Attendance updateCheckInTime(@PathVariable Long id, @RequestBody Attendance request) {
-        return attendanceService.updateCheckInTime(id, request);
+        return service.updateCheckInTime(id, request);
     }
 }

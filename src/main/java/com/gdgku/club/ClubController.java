@@ -1,5 +1,6 @@
 package com.gdgku.club;
 
+import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +28,12 @@ public class ClubController {
 
     private final ClubService clubService;
 
+    public record MemberResponse(Long id, String name, String email) {
+        public static MemberResponse from(Member member){
+            return new MemberResponse(member.getId(), member.getName(), member.getEmail());
+        }
+    }
+
     public ClubController(ClubService clubService) {
         this.clubService = clubService;
     }
@@ -41,12 +49,17 @@ public class ClubController {
     }
 
     @PostMapping("/{clubId}/members")
-    public Member joinClub(@PathVariable Long clubId, @RequestBody Member request) {
-        return clubService.addMember(clubId, request.getName(), request.getEmail(), request.getPassword());
+    public MemberResponse joinClub(@PathVariable Long clubId, @RequestBody Member request) {
+        return MemberResponse.from(clubService.addMember(clubId, request.getName(), request.getEmail(), request.getPassword()));
     }
 
     @GetMapping("/{clubId}/members")
-    public List<Member> getMembers(@PathVariable Long clubId) {
-        return clubService.getMembers(clubId);
+    public List<MemberResponse> getMembers(@PathVariable Long clubId) {
+        List<MemberResponse> memberResponses = new ArrayList<>();
+        List<Member> members = clubService.getMembers(clubId);
+        for (Member member : members){
+            memberResponses.add(MemberResponse.from(member));
+        }
+        return memberResponses;
     }
 }

@@ -2,11 +2,13 @@ package com.gdgku.attendance;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;   // 추가
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@Service
+@Service 
 public class AttendanceService {
     private static final LocalTime LATE_CUTOFF = LocalTime.of(9, 10);
     private static final LocalTime ABSENT_CUTOFF = LocalTime.of(9, 30);
@@ -14,18 +16,21 @@ public class AttendanceService {
     private final List<Attendance> attendances = new ArrayList<>();
     private long nextId = 1L;
 
-    public static String determineStatus(LocalTime checkInTime) {
-        if (!checkInTime.isAfter(LATE_CUTOFF)) {
-            return "ON_TIME";
-        } else if (!checkInTime.isAfter(ABSENT_CUTOFF)) {
-            return "LATE";
+    public String getStatusFromTime(LocalTime time){
+        String status;
+        if (!time.isAfter(LATE_CUTOFF)) {
+            status = "ON_TIME";
+        } else if (!time.isAfter(ABSENT_CUTOFF)) {
+            status = "LATE";
         } else {
-            return "ABSENT";
+            status = "ABSENT";
         }
+        return status;
     }
 
-    public Attendance checkIn(Attendance request) {
-        String status = determineStatus(request.getCheckInTime());
+    public Attendance checkIn(Attendance request){
+        String status = getStatusFromTime(request.getCheckInTime());
+
         Attendance attendance = new Attendance(nextId++, request.getStudentName(), request.getCheckInTime(), status);
         attendances.add(attendance);
         return attendance;
@@ -35,7 +40,7 @@ public class AttendanceService {
         return attendances;
     }
 
-    public Attendance getAttendanceById(long id) {
+    public Attendance getAttendance(Long id){
         for (Attendance attendance : attendances) {
             if (attendance.getId().equals(id)) {
                 return attendance;
@@ -54,15 +59,15 @@ public class AttendanceService {
         return count;
     }
 
-    public Attendance updateCheckInTime(long id, Attendance request) {
-        Attendance attendance = getAttendanceById(id);
+    public Attendance updateCheckInTime(@PathVariable Long id, @RequestBody Attendance request) {
+        Attendance attendance = getAttendance(id);
         if (attendance == null) {
             return null;
         }
 
         attendance.setCheckInTime(request.getCheckInTime());
 
-        String status = determineStatus(request.getCheckInTime());
+        String status = getStatusFromTime(request.getCheckInTime());
         attendance.setStatus(status);
 
         return attendance;
