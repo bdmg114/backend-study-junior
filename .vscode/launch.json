@@ -3,21 +3,35 @@
   "configurations": [
     {
       "type": "java",
-      "name": "\ud83d\ude80 Spring Boot \uc11c\ubc84 \uc2e4\ud589",
+      "name": "ContainerDiDemo",
+      "request": "launch",
+      "mainClass": "com.gdgku.study.di.container.ContainerDiDemo",
+      "projectName": "backend-backend-study-junior"
+    },
+    {
+      "type": "java",
+      "name": "ManualDiDemo",
+      "request": "launch",
+      "mainClass": "com.gdgku.study.di.manual.ManualDiDemo",
+      "projectName": "backend-backend-study-junior"
+    },
+    {
+      "type": "java",
+      "name": "🚀 Spring Boot 서버 실행",
       "request": "launch",
       "mainClass": "com.gdgku.study.backend.BackendApplication",
       "projectName": "backend"
     },
     {
       "type": "java",
-      "name": "\ud83e\uddea \uc804\uccb4 \ud14c\uc2a4\ud2b8 \uc2e4\ud589",
+      "name": "🧪 전체 테스트 실행",
       "request": "launch",
       "mainClass": "com.gdgku.study.backend.BackendApplicationTests",
       "projectName": "backend"
     },
     {
       "type": "node-terminal",
-      "name": "\ud83d\udee1\ufe0f CycloneDX SBOM \ucd94\ucd9c",
+      "name": "🛡️ CycloneDX SBOM 추출",
       "request": "launch",
       "command": "./gradlew cyclonedxBom"
     }

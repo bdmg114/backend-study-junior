@@ -1,4 +1,4 @@
-package com.gdgku.study.backend;
+package com.gdgku;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
